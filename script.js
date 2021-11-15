@@ -11,12 +11,12 @@ boxes[0] =
     y: 300,
     width: 200
 };
-let debris = 
+let reduce = 
 {
     x: 0,
     width: 0
 };
-function newBox() 
+function new_box() 
 {
     boxes[current] = {
         x: 0,
@@ -24,14 +24,14 @@ function newBox()
         width: boxes[current - 1].width
     };
 }
-function gameOver() 
+function finish() 
 {
-    mode = 'gameOver';
+    mode = 'finish';
     context.fillText('Game over.Better luck next Time.', 150, 150);
 }
 function animate() 
 {
-    if (mode != 'gameOver') 
+    if (mode != 'finish') 
     {
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.fillText('Score: ' + (current - 1).toString(), 750, 100);
@@ -41,7 +41,7 @@ function animate()
             context.fillRect(box.x, 600 - box.y + cameraY, box.width, height);
         }
         context.fillStyle = 'black';
-        context.fillRect(debris.x, 600 - debris.y + cameraY, debris.width, height);
+        context.fillRect(reduce.x, 600 - reduce.y + cameraY, reduce.width, height);
         if (mode == 'bounce') 
         {
             boxes[current].x = boxes[current].x + xSpeed;
@@ -59,26 +59,26 @@ function animate()
                 let difference = boxes[current].x - boxes[current - 1].x;
                 if (Math.abs(difference) >= boxes[current].width) 
                 {
-                    gameOver();
+                    finish();
                 }
-                debris = {
+                reduce = {
                 y: boxes[current].y,
                 width: difference
             };
             if (boxes[current].x > boxes[current - 1].x) 
             {
                 boxes[current].width = boxes[current].width - difference;
-                debris.x = boxes[current].x + boxes[current].width;
+                reduce.x = boxes[current].x + boxes[current].width;
             } 
             else 
             {
-                debris.x = boxes[current].x - difference;
+                reduce.x = boxes[current].x - difference;
                 boxes[current].width = boxes[current].width + difference;
                 boxes[current].x = boxes[current - 1].x;
             }
             current++;
             scrollCounter = height;
-            newBox();
+            new_box();
         }
     }
     if (scrollCounter) 
@@ -97,12 +97,12 @@ function restart()
     scrollCounter = 0;
     xSpeed = 2;
     current = 1;
-    newBox();
-    debris.y = 0;
+    new_box();
+    reduce.y = 0;
 }
 canvas.onpointerdown = function() 
 {
-    if (mode == 'gameOver')
+    if (mode == 'finish')
         restart();
     else 
     {
